@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+bin/* text eol=lf
+tests/stubs/bin/* text eol=lf
