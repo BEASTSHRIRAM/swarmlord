@@ -1,0 +1,60 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "swarmlord",
+  "version": "0.1.0",
+  "description": "Claude Code orchestrates many CLI coding agents. Claude picks the best CLI agent for each task from user-configurable routing rules (config/routing.json), runs it headlessly in its own git worktree, verifies the result against the filesystem and tests, and can hand off between agents mid-task \u2014 with a ledger-backed circuit breaker that pauses on state recurrence, repeated errors, cross-agent reverts, and budget overruns. Adapters: Codex, Kiro, Copilot, Gemini, OpenCode, Command Code, Muse Code, Antigravity, Aider, Goose, and local LLMs (Ollama / LM Studio / any OpenAI-compatible endpoint).",
+  "author": {
+    "name": "Sriram Kulkarni"
+  },
+  "keywords": [
+    "multi-agent",
+    "orchestration",
+    "delegation",
+    "codex",
+    "kiro",
+    "copilot",
+    "gemini",
+    "opencode",
+    "antigravity",
+    "model-routing",
+    "cli-agents"
+  ],
+  "userConfig": {
+    "default_agent": {
+      "type": "string",
+      "title": "Default agent",
+      "description": "Agent id (from config/agents.json) used when a delegation names no agent and routing is not applied. Leave empty to route by task type via config/routing.json.",
+      "default": ""
+    },
+    "timeout": {
+      "type": "string",
+      "title": "Default per-run timeout",
+      "description": "Wall-clock bound for one delegated run, e.g. 5m, 10m, 300s. A run that exceeds it is killed and classified as a timeout.",
+      "default": "10m"
+    },
+    "coding_policy": {
+      "type": "string",
+      "title": "Inject routing policy at session start",
+      "description": "When on, a SessionStart hook injects the SwarmLord routing policy (delegate above the break-even, verify everything, respect the circuit breaker) as session context. Set to off/false/0/no to suppress.",
+      "default": "on"
+    },
+    "delegation_nudge": {
+      "type": "string",
+      "title": "Nudge delegation on bulk-looking prompts",
+      "description": "When on, a UserPromptSubmit hook adds a short advisory note when a prompt looks like bulk work above the delegation break-even. Advisory only \u2014 the break-even judgment stays with Claude.",
+      "default": "on"
+    },
+    "local_url": {
+      "type": "string",
+      "title": "Local LLM endpoint (local adapter)",
+      "description": "Base URL of an OpenAI-compatible local endpoint for the `local` adapter, e.g. http://localhost:11434 (Ollama) or http://localhost:1234 (LM Studio).",
+      "default": ""
+    },
+    "local_model": {
+      "type": "string",
+      "title": "Local LLM model (local adapter)",
+      "description": "Model id the local adapter asks the endpoint for. Must be a model your endpoint actually serves.",
+      "default": ""
+    }
+  }
+}

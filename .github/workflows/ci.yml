@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell syntax
+        run: |
+          find scripts hooks bin tests -type f \( -name '*.sh' -o -path 'bin/*' \) -print0 \
+            | xargs -0 -n1 bash -n
+      - name: JSON manifests parse
+        run: |
+          python3 -c 'import json; [json.load(open(f)) for f in
+            ["config/agents.json", "config/routing.json",
+             ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json",
+             "hooks/hooks.json"]]'
+      - name: Stub-based test suite
+        run: bash tests/run-tests.sh

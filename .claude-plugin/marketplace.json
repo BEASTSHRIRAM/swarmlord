@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "swarmlord",
+  "description": "SwarmLord: Claude Code orchestrates many CLI coding agents \u2014 routed, isolated, verified, with a deadlock circuit breaker.",
+  "owner": {
+    "name": "Sriram Kulkarni"
+  },
+  "plugins": [
+    {
+      "name": "swarmlord",
+      "description": "Multi-agent delegation for Claude Code: route tasks to Codex, Kiro, Copilot, Gemini, OpenCode, Command Code, Muse Code, Antigravity, Aider, Goose, or a local LLM \u2014 each run in its own git worktree, verified by Claude, guarded by a ledger-backed circuit breaker.",
+      "source": "./",
+      "category": "ai",
+      "keywords": [
+        "multi-agent",
+        "orchestration",
+        "delegation",
+        "model-routing",
+        "cli-agents"
+      ]
+    }
+  ]
+}

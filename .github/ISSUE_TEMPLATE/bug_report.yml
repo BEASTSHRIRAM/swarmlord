@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a problem with SwarmLord delegation, routing, an adapter, or the circuit breaker.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Before filing, please check
+        [docs/TROUBLESHOOTING.md](../../docs/TROUBLESHOOTING.md) — most
+        auth, quota, and permission exits are explained there by exit code.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include the exact command you ran (e.g. `/swarmlord:delegate ...` or `swarmlord-delegate --agent codex ...`) and the output/error you got.
+      placeholder: |
+        Ran: swarmlord-delegate --task-type backend --dir . "..."
+        Got: ...
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `swarmlord-doctor` (or `/swarmlord:setup`)
+      description: Paste the full output — it lists every adapter's install/auth state and version. If `swarmlord-doctor` isn't found, say so.
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install the plugin?
+      options:
+        - Marketplace (/plugin install swarmlord@swarmlord)
+        - Manual clone / local marketplace
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: agentver
+    attributes:
+      label: Agent CLI + version involved
+      placeholder: "e.g. codex --version → 0.x (also visible in doctor output)"
+  - type: textarea
+    id: ledger
+    attributes:
+      label: Ledger lines for the task (optional)
+      description: If the circuit breaker or routing misbehaved, paste the task's lines from `.git/swarmlord/ledger.jsonl`. They contain hashes and metadata only — no prompt text.

@@ -1,0 +1,457 @@
+{
+  "version": 1,
+  "verified_on": "2026-11-04",
+  "note": "Capability manifest. Commands/flags are recorded only where verified against official docs or --help on the date in verified_against; anything else is marked TODO and must not be relied on.",
+  "agents": {
+    "codex": {
+      "display_name": "OpenAI Codex CLI",
+      "binary": "codex",
+      "version_cmd": "codex --version",
+      "auth": {
+        "status_cmd": "codex login status",
+        "env": [
+          "OPENAI_API_KEY",
+          "CODEX_API_KEY"
+        ],
+        "status": "verified"
+      },
+      "headless": "codex exec \"<prompt>\"",
+      "permission": {
+        "narrow": "--sandbox workspace-write (exec defaults to a read-only sandbox)",
+        "full_trust": "--dangerously-bypass-approvals-and-sandbox (alias --yolo)",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "--json (JSONL events; turn.completed carries usage)"
+      },
+      "resume": {
+        "supported": true,
+        "how": "codex exec resume --last \"<prompt>\" | codex exec resume <SESSION_ID> \"<prompt>\""
+      },
+      "cost_tier": "medium",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "https://developers.openai.com/codex/noninteractive/",
+          "https://developers.openai.com/codex/auth.md",
+          "https://developers.openai.com/codex/sandbox"
+        ]
+      },
+      "todos": [
+        "min_tested_version not yet pinned against a local install"
+      ]
+    },
+    "kiro": {
+      "display_name": "Kiro CLI (AWS)",
+      "binary": "kiro-cli",
+      "version_cmd": "kiro-cli --version",
+      "auth": {
+        "status_cmd": "kiro-cli whoami",
+        "env": [
+          "KIRO_API_KEY"
+        ],
+        "status": "verified",
+        "notes": "headless mode requires KIRO_API_KEY"
+      },
+      "headless": "kiro-cli chat --no-interactive \"<prompt>\"",
+      "permission": {
+        "narrow": "--trust-tools=<exact tool IDs>",
+        "full_trust": "--trust-all-tools",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "--output-format stream-json"
+      },
+      "resume": {
+        "supported": true,
+        "how": "kiro-cli chat --resume | --resume-id <SESSION_ID>"
+      },
+      "cost_tier": "medium",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "https://kiro.dev/docs/cli/headless/",
+          "https://kiro.dev/docs/reference/cli-commands/"
+        ]
+      },
+      "todos": [
+        "pin a harness in headless runs (--v2 or --v3) once tested locally",
+        "min_tested_version not yet pinned"
+      ]
+    },
+    "copilot": {
+      "display_name": "GitHub Copilot CLI",
+      "binary": "copilot",
+      "version_cmd": "copilot --version",
+      "auth": {
+        "status_cmd": null,
+        "env": [
+          "COPILOT_GITHUB_TOKEN",
+          "GH_TOKEN",
+          "GITHUB_TOKEN"
+        ],
+        "status": "TODO: no dedicated non-interactive auth-status command found in official docs (2026-11-04); doctor treats a successful version probe as auth:unknown"
+      },
+      "headless": "copilot -p \"<prompt>\"",
+      "permission": {
+        "narrow": "--allow-tool=<kind or filter> (repeatable); with no permission options, approval-needing requests are denied in non-interactive runs",
+        "full_trust": "--allow-all (alias --yolo) = --allow-all-tools --allow-all-paths --allow-all-urls",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "--output-format=json (JSONL)"
+      },
+      "resume": {
+        "supported": true,
+        "how": "copilot -p \"<prompt>\" --continue | --resume=<SESSION_ID> (bare --resume errors under -p)"
+      },
+      "cost_tier": "medium",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-programmatic-reference",
+          "https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli"
+        ]
+      },
+      "todos": [
+        "auth status probe",
+        "--model flag support not verified from official docs \u2014 adapter does not pass one",
+        "min_tested_version not yet pinned"
+      ]
+    },
+    "gemini": {
+      "display_name": "Gemini CLI",
+      "binary": "gemini",
+      "version_cmd": "gemini --version",
+      "auth": {
+        "status_cmd": null,
+        "env": [
+          "GEMINI_API_KEY",
+          "GOOGLE_API_KEY"
+        ],
+        "status": "TODO: no dedicated auth-status command found in official docs (2026-11-04); doctor treats a successful version probe as auth:unknown"
+      },
+      "headless": "gemini -p \"<prompt>\"",
+      "permission": {
+        "narrow": "--approval-mode auto_edit (plan = read-only)",
+        "full_trust": "--approval-mode=yolo",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "--output-format json (single object: response + stats + error) | stream-json"
+      },
+      "resume": {
+        "supported": true,
+        "how": "gemini --resume latest|<SESSION_ID> \"<prompt>\""
+      },
+      "cost_tier": "low",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "https://geminicli.com/docs/cli/cli-reference/",
+          "https://google-gemini.github.io/gemini-cli/docs/cli/headless.html",
+          "https://geminicli.com/docs/get-started/authentication/"
+        ]
+      },
+      "todos": [
+        "auth status probe",
+        "min_tested_version not yet pinned"
+      ]
+    },
+    "opencode": {
+      "display_name": "OpenCode",
+      "binary": "opencode",
+      "version_cmd": "opencode --version",
+      "auth": {
+        "status_cmd": "opencode auth list",
+        "env": [],
+        "status": "verified"
+      },
+      "headless": "opencode run \"<prompt>\"",
+      "permission": {
+        "narrow": "config-driven permission rules (allow/ask/deny per tool) in opencode config",
+        "full_trust": "opencode run --auto (closest equivalent: auto-approves what is not explicitly denied; NO --yolo-style flag is documented)",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "run --format json"
+      },
+      "resume": {
+        "supported": true,
+        "how": "opencode run --continue | --session <SESSION_ID>"
+      },
+      "cost_tier": "low",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "https://opencode.ai/docs/cli/",
+          "https://opencode.ai/docs/permissions"
+        ]
+      },
+      "todos": [
+        "TODO: no true full-trust flag documented \u2014 --auto still honours explicit deny rules",
+        "min_tested_version not yet pinned"
+      ]
+    },
+    "command-code": {
+      "display_name": "Command Code",
+      "binary": "cmd (cmdc on Windows; command-code works everywhere)",
+      "version_cmd": "cmd --version",
+      "auth": {
+        "status_cmd": "cmd status (cmd status --json for automation)",
+        "env": [
+          "COMMAND_CODE_API_KEY"
+        ],
+        "status": "verified"
+      },
+      "headless": "cmd -p \"<prompt>\"",
+      "permission": {
+        "narrow": "headless default already blocks all modifying tools; --accept-edits is the narrow write grant",
+        "full_trust": "--yolo (alias --dangerously-skip-permissions). NOTE: --permission-mode yolo does NOT lift the headless block; --yolo must be passed",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "--output-format json (NDJSON events + final result line with usage/sessionId)"
+      },
+      "resume": {
+        "supported": true,
+        "how": "cmd -p --continue | cmd -p --resume <SESSION_ID>"
+      },
+      "exit_codes_documented": {
+        "0": "success",
+        "1": "general error",
+        "3": "not authenticated",
+        "4": "permission denied",
+        "5": "rate limit",
+        "6": "network failure",
+        "7": "API server error",
+        "8": "max turns",
+        "9": "no response",
+        "10": "insufficient credits",
+        "130": "interrupted"
+      },
+      "cost_tier": "medium",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "https://commandcode.ai/docs/headless",
+          "https://commandcode.ai/docs/reference/cli"
+        ]
+      },
+      "todos": [
+        "min_tested_version not yet pinned"
+      ]
+    },
+    "muse": {
+      "display_name": "Muse Code (Meta)",
+      "binary": "muse",
+      "version_cmd": "muse --version",
+      "auth": {
+        "status_cmd": null,
+        "env": [
+          "META_API_KEY"
+        ],
+        "status": "TODO: no dedicated auth-status command documented (2026-11-04); `muse usage` is the closest documented probe (shows allowance without a model turn)"
+      },
+      "headless": "muse exec \"<prompt>\"",
+      "permission": {
+        "narrow": "defaults: approvals + OS sandbox on; Read-only profile is narrowest; --disable-approval skips approvals but keeps the sandbox",
+        "full_trust": "--yolo (disables approval AND sandbox, trusts the workspace \u2014 Meta documents it for disposable containers only)",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "muse exec --json (JSONL; includes a run.usage line)"
+      },
+      "resume": {
+        "supported": true,
+        "how": "headless: muse exec --session-id <UUID> \"<prompt>\" (muse resume is interactive-only)"
+      },
+      "exit_codes_documented": {
+        "0": "turn completed",
+        "1": "failed or cancelled (incl. --max-model-steps cap)",
+        "2": "usage error",
+        "130": "SIGINT",
+        "143": "SIGTERM"
+      },
+      "cost_tier": "paid (no free tier documented: pay-as-you-go per token, or a flat Muse Code subscription plan)",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "https://dev.meta.ai/docs/muse-code",
+          "https://dev.meta.ai/docs/muse-code/permissions",
+          "https://dev.meta.ai/docs/muse-code/configuration",
+          "https://dev.meta.ai/docs/muse-code/auth"
+        ]
+      },
+      "todos": [
+        "auth status probe",
+        "min_tested_version not yet pinned"
+      ]
+    },
+    "antigravity": {
+      "display_name": "Antigravity CLI (agy)",
+      "binary": "agy",
+      "version_cmd": "agy --version",
+      "auth": {
+        "status_cmd": "agy models (lists models when authenticated)",
+        "env": [],
+        "status": "verified against the upstream wrapper's behaviour (agy 1.1.x-1.4.x)"
+      },
+      "headless": "agy -p \"<prompt>\" (print mode; wrapper always redirects stdin from /dev/null)",
+      "permission": {
+        "narrow": "permissions.allow rules in agy settings (e.g. write_file(<dir>)); without a grant, tool calls are soft-denied headless",
+        "full_trust": "--dangerously-skip-permissions (the wrapper's --yolo reaches agy as this flag)",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "--output-format json (agy >= 1.1.8)"
+      },
+      "resume": {
+        "supported": true,
+        "how": "agy -p -c \"<prompt>\" (continue most recent) | --conversation <ID>"
+      },
+      "cost_tier": "low",
+      "min_tested_version": "1.1.8 (JSON output); 1.1.10+ recommended (--model honoured headless)",
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "upstream wrapper scripts/agy-delegate.sh + doctor.sh, verified against agy 1.1.8-1.4.4 behaviour"
+        ]
+      },
+      "todos": []
+    },
+    "aider": {
+      "display_name": "Aider",
+      "binary": "aider",
+      "version_cmd": "aider --version",
+      "auth": {
+        "status_cmd": null,
+        "env": [
+          "OPENAI_API_KEY",
+          "ANTHROPIC_API_KEY",
+          "GEMINI_API_KEY"
+        ],
+        "status": "TODO: provider key comes from env/config; no auth-status command used"
+      },
+      "headless": "aider --message \"<prompt>\" (single message, then exits) | --message-file <path>",
+      "permission": {
+        "narrow": "default: aider asks for confirmation before adding files / running shell (non-TTY answers decline)",
+        "full_trust": "--yes-always (auto-confirm every prompt)",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": false,
+        "flag": null
+      },
+      "resume": {
+        "supported": false,
+        "how": "TODO: no headless session-resume flag verified; adapter reports resume unsupported"
+      },
+      "cost_tier": "BYOK (model-dependent)",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "https://aider.chat/docs/usage/commands.html",
+          "aider --help (documented flags: --message, --message-file, --yes-always, --model)"
+        ]
+      },
+      "todos": [
+        "resume support",
+        "min_tested_version not yet pinned"
+      ]
+    },
+    "goose": {
+      "display_name": "Goose (Block / Agentic AI Foundation)",
+      "binary": "goose",
+      "version_cmd": "goose --version",
+      "auth": {
+        "status_cmd": null,
+        "env": [],
+        "status": "TODO: provider is set via `goose configure`; no auth-status command used"
+      },
+      "headless": "goose run --text \"<prompt>\" | goose run --instructions <file>",
+      "permission": {
+        "narrow": "permission mode is config-driven (Autonomous is the DEFAULT, Manual Approval / Smart Approval / Chat Only are narrower) \u2014 set via goose configure",
+        "full_trust": "Autonomous mode (the default) \u2014 no flag needed, which is itself the risk to note",
+        "full_trust_unsafe": true
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "goose run --output-format json|stream-json (per goose CLI docs)"
+      },
+      "resume": {
+        "supported": true,
+        "how": "goose run --resume-session (reuses a saved session) \u2014 session naming/IDs: TODO verify against installed version"
+      },
+      "cost_tier": "BYOK (model-dependent)",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "https://block.github.io/goose/docs/guides/goose-cli-commands (run/session)",
+          "official goose docs: goose run --text in Docker/CI guides"
+        ]
+      },
+      "todos": [
+        "exact permission-mode flag for `goose run` not verified \u2014 adapter passes no permission flag",
+        "resume session-id form",
+        "min_tested_version not yet pinned"
+      ]
+    },
+    "local": {
+      "display_name": "Local LLM (Ollama / LM Studio / any OpenAI-compatible endpoint)",
+      "binary": null,
+      "version_cmd": "GET <endpoint>/v1/models",
+      "auth": {
+        "status_cmd": null,
+        "env": [
+          "SWARMLORD_LOCAL_URL",
+          "SWARMLORD_LOCAL_MODEL",
+          "SWARMLORD_LOCAL_API_KEY"
+        ],
+        "status": "no auth by default; SWARMLORD_LOCAL_API_KEY is sent as a bearer token when set"
+      },
+      "headless": "POST <endpoint>/v1/chat/completions (adapter-implemented; reply-only \u2014 a local chat endpoint cannot edit files or run tools by itself)",
+      "permission": {
+        "narrow": "n/a \u2014 the adapter has no file or shell access at all",
+        "full_trust": null,
+        "full_trust_unsafe": false
+      },
+      "json_output": {
+        "supported": true,
+        "flag": "native (OpenAI-compatible JSON response)"
+      },
+      "resume": {
+        "supported": false,
+        "how": "stateless endpoint; conversation state is not kept"
+      },
+      "cost_tier": "local/free",
+      "min_tested_version": null,
+      "verified_against": {
+        "date": "2026-11-04",
+        "sources": [
+          "OpenAI-compatible API shape used by Ollama and LM Studio local servers"
+        ]
+      },
+      "todos": [
+        "tool-calling local agents (e.g. via goose/opencode pointed at a local model) are covered by those adapters, not this one"
+      ]
+    }
+  }
+}

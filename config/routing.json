@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "note": "User-editable routing defaults. Order matters: the first healthy agent wins; the rest are fallbacks when an agent is missing, unauthenticated, or out of quota (cooldown). Override per project with .swarmlord/routing.json in the repo, or per run with --agent. These are defaults, not facts \u2014 change them freely.",
+  "task_types": {
+    "frontend": [
+      "gemini",
+      "codex",
+      "copilot",
+      "opencode"
+    ],
+    "backend": [
+      "codex",
+      "copilot",
+      "opencode",
+      "muse"
+    ],
+    "tests": [
+      "copilot",
+      "codex",
+      "aider",
+      "gemini"
+    ],
+    "refactor": [
+      "codex",
+      "aider",
+      "opencode",
+      "antigravity"
+    ],
+    "docs": [
+      "gemini",
+      "local",
+      "aider",
+      "copilot"
+    ],
+    "research": [
+      "gemini",
+      "antigravity",
+      "goose",
+      "local"
+    ],
+    "review": [
+      "copilot",
+      "codex",
+      "muse",
+      "gemini"
+    ],
+    "default": [
+      "codex",
+      "gemini",
+      "copilot"
+    ]
+  },
+  "cooldown_minutes": 30,
+  "budgets": {
+    "per_task": {
+      "max_runs": 8,
+      "max_handoffs": 3,
+      "max_seconds": 3600,
+      "max_cost_usd": null
+    },
+    "per_run_timeout": "10m"
+  },
+  "full_trust": {
+    "note": "Full-trust flags are NEVER passed by default. Set an agent to true here (or pass --full-trust per run) only inside a disposable container.",
+    "agents": {}
+  }
+}
