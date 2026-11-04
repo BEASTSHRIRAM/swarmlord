@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="SwarmLord: Claude orchestrating a swarm of CLI coding agents" width="420">
+</p>
+
 # SwarmLord
 
 **Claude Code orchestrates. Every CLI coding agent executes.**

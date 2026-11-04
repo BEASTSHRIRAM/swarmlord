@@ -9,6 +9,17 @@ EX_OK=0; EX_USAGE=1; EX_FAILED=2; EX_EMPTY=3; EX_TIMEOUT=10; EX_AUTH=11
 EX_QUOTA=12; EX_PERMISSION=13; EX_MODEL=14; EX_NOT_INSTALLED=15
 EX_BREAKER=16; EX_CONFLICT=17
 
+# Windows (Git Bash / MSYS / Cygwin): native Python writes CRLF to stdout, and
+# bash keeps the '\r', so `mapfile`/`$(...)` yield values like "codex\r" that
+# never match a file or a string. Wrap python3 to strip CR, preserving its exit
+# status, and export the wrapper so child scripts (adapters, libs) inherit it.
+case "$(uname -s 2>/dev/null)" in
+  MINGW*|MSYS*|CYGWIN*)
+    python3() { command python3 "$@" | tr -d '\r'; return "${PIPESTATUS[0]}"; }
+    export -f python3
+    ;;
+esac
+
 swarm_timeout_cmd() {  # echoes a usable timeout command name, or nothing
   if command -v timeout >/dev/null 2>&1; then echo timeout;
   elif command -v gtimeout >/dev/null 2>&1; then echo gtimeout; fi

@@ -34,7 +34,7 @@ for f in scripts/lib/plugin-options.sh scripts/lib/router.sh scripts/adapters/ge
 done
 grep -rq "agy-delegate\|agy-job\|agy-handoff" "$ROOT/scripts" "$ROOT/bin" "$ROOT/commands" "$ROOT/hooks" "$ROOT/.claude-plugin" 2>/dev/null \
   && bad "no upstream agy-* wrapper names remain" || ok "no upstream agy-* wrapper names remain"
-[ "$(python3 -c 'import json; print(json.load(open("'"$ROOT"'/.claude-plugin/plugin.json"))["name"])')" = "swarmlord" ] \
+[ "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["name"])' "$ROOT/.claude-plugin/plugin.json" | tr -d '\r')" = "swarmlord" ] \
   && ok "plugin renamed to swarmlord" || bad "plugin renamed to swarmlord"
 
 # ---------- adapter interface (stub CLIs) ----------
@@ -172,7 +172,9 @@ out="$(STUB_WRITE=file.txt STUB_CONTENT=original bash "$DEL" --agent codex --dir
 check "breaker trip exit code" "$rc" "16"
 ls "$REPO/.git/swarmlord/reports/"*trip1* >/dev/null 2>&1 && ok "conflict report written" || bad "conflict report written"
 # PreToolUse hook blocks the tripped task
-hookout="$(printf '{"tool_input":{"command":"swarmlord-delegate --task-id trip1 \\"again\\""},"cwd":"%s"}' "$REPO" | bash "$ROOT/hooks/circuit-breaker.sh" 2>&1)"; rc=$?
+# Claude Code sends a native path as cwd; on Windows that is C:/..., not /tmp/...
+HOOK_CWD="$REPO"; command -v cygpath >/dev/null 2>&1 && HOOK_CWD="$(cygpath -m "$REPO")"
+hookout="$(printf '{"tool_input":{"command":"swarmlord-delegate --task-id trip1 \\"again\\""},"cwd":"%s"}' "$HOOK_CWD" |bash "$ROOT/hooks/circuit-breaker.sh" 2>&1)"; rc=$?
 check "PreToolUse hook blocks tripped task" "$rc" "2"
 # claim conflict e2e
 python3 "$SWARMPY" append --ledger "$REPO/.git/swarmlord/ledger.jsonl" --entry "{\"ts\": $(date +%s), \"task_id\": \"holder\", \"agent\": \"\", \"event\": \"claim\", \"claims\": [\"file.txt\"]}"
